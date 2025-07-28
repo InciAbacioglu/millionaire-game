@@ -7,9 +7,11 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "firebase": "^11.10.0",
     "next": "latest",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sass": "^1.89.2"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",

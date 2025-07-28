@@ -1,0 +1,34 @@
+.timer {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #00fff7;
+  text-shadow: 0 0 10px #00fff7aa;
+  animation: pulse 1s infinite ease-in-out;
+  background: #111;
+  border: 2px solid #00fff744;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  display: inline-block;
+  box-shadow: 0 0 12px #00fff733;
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 5px #00fff7aa;
+  }
+  50% {
+    text-shadow: 0 0 15px #00fff7dd;
+  }
+  100% {
+    text-shadow: 0 0 5px #00fff7aa;
+  }
+}
+
+@media (max-width: 600px) {
+  .timer {
+    font-size: 1.5rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

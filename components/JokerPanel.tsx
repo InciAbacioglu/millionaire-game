@@ -1,3 +1,5 @@
+import styles from "./JokerPanel.module.scss";
+
 type Props = {
   correctAnswer: string;
   allAnswers: string[];
@@ -12,10 +14,25 @@ export default function JokerPanel({
   onPhone,
 }: Props) {
   return (
-    <div style={{ marginBottom: "1rem" }}>
-      <button onClick={() => onFiftyFifty()}>🎲 50:50</button>
-      <button onClick={() => onAudience()}>👥 Audience</button>
-      <button onClick={() => onPhone()}>☎ Phone</button>
+    <div className={styles.jokerPanel}>
+      <button
+        onClick={onFiftyFifty}
+        className={`${styles.jokerButton} ${styles.fifty}`}
+      >
+        🎲 50:50
+      </button>
+      <button
+        onClick={onAudience}
+        className={`${styles.jokerButton} ${styles.audience}`}
+      >
+        👥 Audience
+      </button>
+      <button
+        onClick={onPhone}
+        className={`${styles.jokerButton} ${styles.phone}`}
+      >
+        ☎ Phone
+      </button>
     </div>
   );
 }

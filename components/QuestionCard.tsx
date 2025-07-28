@@ -1,3 +1,5 @@
+import styles from "./QuestionCard.module.scss";
+
 type Props = {
   question: string;
   answers: string[];
@@ -10,13 +12,16 @@ export default function QuestionCard({
   onAnswerClick,
 }: Props) {
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2 dangerouslySetInnerHTML={{ __html: question }} />
+    <div className={styles.card}>
+      <h2
+        className={styles.question}
+        dangerouslySetInnerHTML={{ __html: question }}
+      />
       {answers.map((answer, idx) => (
         <button
           key={idx}
           onClick={() => onAnswerClick(answer)}
-          style={{ display: "block", margin: "1rem 0", padding: "0.5rem" }}
+          className={styles.answerButton}
         >
           {answer}
         </button>

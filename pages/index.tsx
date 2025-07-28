@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../utils/firebase";
+
 import Timer from "../components/Timer";
-import QuestionCard from "../components/QUestionCard";
+import QuestionCard from "../components/QuestionCard";
 import JokerPanel from "../components/JokerPanel";
 import MoneyLadder from "../components/MoneyLadder";
-import GameOver from "../components/GameOver";
-import Finish from "../components/Finish";
+import Notification from "../components/Notification";
+import Finish from "../components/endgame/Finish";
+import GameOver from "../components/endgame/GameOver";
+import Footer from "../components/layout/Footer";
+import Header from "../components/layout/Header";
+
+import styles from "../styles/index.module.scss";
 
 type Question = {
   question: string;
@@ -14,6 +23,8 @@ type Question = {
 };
 
 export default function Home() {
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
@@ -27,6 +38,9 @@ export default function Home() {
 
   const [wrongCount, setWrongCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [gameOverReason, setGameOverReason] = useState<"timeout" | "wrong">(
+    "wrong"
+  );
 
   const moneyList = [
     "$100",
@@ -51,6 +65,13 @@ export default function Home() {
   const [earned, setEarned] = useState("$0");
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     const fetchQuestions = async () => {
       const difficulties = ["easy", "medium", "hard"];
       const all: Question[] = [];
@@ -60,9 +81,7 @@ export default function Home() {
           `https://opentdb.com/api.php?amount=6&difficulty=${diff}&type=multiple`
         );
         const data = await res.json();
-        if (data?.results?.length > 0) {
-          all.push(...data.results);
-        }
+        if (data?.results?.length > 0) all.push(...data.results);
       }
 
       setQuestions(all);
@@ -83,31 +102,32 @@ export default function Home() {
     setEarned(moneyList[currentQuestionIndex - 1] || "$0");
   }, [questions, currentQuestionIndex]);
 
+  const showNotification = (msg: string, duration = 2000) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), duration);
+  };
+
   const handleAnswerClick = (answer: string) => {
     const correct = questions[currentQuestionIndex].correct_answer;
-
     if (answer === correct) {
-      setNotification("✅ Correct!");
-      setTimeout(() => setNotification(null), 1500);
+      showNotification("✅ Correct!", 1500);
       setCurrentQuestionIndex((prev) => prev + 1);
       setTimerReset((prev) => prev + 1);
     } else {
-      const newWrongCount = wrongCount + 1;
-      setNotification(`❌ Wrong! Remaining chances: ${3 - newWrongCount}`);
-      setTimeout(() => setNotification(null), 2000);
-
-      setWrongCount(newWrongCount);
-      if (newWrongCount >= 3) {
+      const updated = wrongCount + 1;
+      showNotification(`❌ Wrong! Remaining chances: ${3 - updated}`, 2000);
+      setWrongCount(updated);
+      if (updated >= 3) {
+        setGameOverReason("wrong");
         setGameOver(true);
       }
     }
   };
 
   const handleTimeUp = () => {
-    setNotification("⏰ Time's up!");
-    setTimeout(() => setNotification(null), 2000);
-    setCurrentQuestionIndex((prev) => prev + 1);
-    setTimerReset((prev) => prev + 1);
+    showNotification("⏰ Time's up!");
+    setGameOverReason("timeout");
+    setGameOver(true);
   };
 
   const handleFiftyFifty = () => {
@@ -143,45 +163,48 @@ export default function Home() {
   };
 
   if (questions.length === 0) return <p>Loading questions...</p>;
-  if (gameOver) return <GameOver earned={earned} />;
+  if (gameOver) return <GameOver earned={earned} reason={gameOverReason} />;
   if (currentQuestionIndex >= 18) return <Finish earned={earned} />;
 
   const current = questions[currentQuestionIndex];
 
   return (
-    <div className="game-container">
-      {notification && (
-        <div
-          style={{
-            background: "#222",
-            color: "#fff",
-            padding: "12px",
-            borderRadius: "8px",
-            marginBottom: "10px",
-            textAlign: "center",
-          }}
-        >
-          {notification}
+    <div className={styles.root}>
+      <Header userEmail={user?.email} />
+
+      <div className={styles["game-container"]}>
+        {notification && <Notification message={notification} />}
+
+        <div className={styles["top-bar"]}>
+          <Timer
+            duration={30}
+            onTimeUp={handleTimeUp}
+            resetTrigger={timerReset}
+          />
+          <JokerPanel
+            correctAnswer={current.correct_answer}
+            allAnswers={shuffledAnswers}
+            onFiftyFifty={handleFiftyFifty}
+            onAudience={handleAudience}
+            onPhone={handlePhone}
+          />
         </div>
-      )}
 
-      <Timer duration={30} onTimeUp={handleTimeUp} resetTrigger={timerReset} />
+        <div className={styles["bottom-section"]}>
+          <div className={styles["left-side"]}>
+            <QuestionCard
+              question={current.question}
+              answers={visibleAnswers}
+              onAnswerClick={handleAnswerClick}
+            />
+          </div>
+          <div className={styles["right-side"]}>
+            <MoneyLadder currentIndex={currentQuestionIndex} />
+          </div>
+        </div>
+      </div>
 
-      <JokerPanel
-        correctAnswer={current.correct_answer}
-        allAnswers={shuffledAnswers}
-        onFiftyFifty={handleFiftyFifty}
-        onAudience={handleAudience}
-        onPhone={handlePhone}
-      />
-
-      <QuestionCard
-        question={current.question}
-        answers={visibleAnswers}
-        onAnswerClick={handleAnswerClick}
-      />
-
-      <MoneyLadder currentIndex={currentQuestionIndex} />
+      <Footer />
     </div>
   );
 }

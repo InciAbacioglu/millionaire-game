@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styles from "./Timer.module.scss";
 
 type Props = {
   duration: number;
@@ -26,9 +27,5 @@ export default function Timer({ duration, onTimeUp, resetTrigger }: Props) {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  return (
-    <div style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "1rem" }}>
-      ⏳ Time Left: {timeLeft}s
-    </div>
-  );
+  return <div className={styles.timer}>⏳ Time Left: {timeLeft}s</div>;
 }

@@ -4,7 +4,10 @@
 //
 // import { User } from 'path/to/interfaces';
 
+import { ReactNode } from "react";
+
 export type User = {
+  email: ReactNode;
   id: number;
   name: string;
 };

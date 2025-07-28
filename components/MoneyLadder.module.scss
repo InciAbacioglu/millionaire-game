@@ -1,0 +1,64 @@
+.moneyLadder {
+  width: 240px;
+  background-color: #111;
+  border: 2px solid #444;
+  border-radius: 12px;
+  padding: 0.5rem;
+  font-family: "Courier New", monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: none;
+  overflow: hidden;
+  box-shadow: 0 0 12px #00fff799;
+}
+
+.ladderStep {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  background: linear-gradient(to right, #1f1f1f, #2a2a2a);
+  color: #ccc;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 0.8rem;
+
+  span {
+    font-weight: bold;
+    color: #999;
+  }
+
+  &:hover {
+    background: linear-gradient(to right, #2c2c2c, #333);
+    color: #fff;
+  }
+}
+
+.active {
+  background: linear-gradient(90deg, #ffcc00, #ffaa00);
+  color: #000;
+  box-shadow: 0 0 12px #ffcc00aa;
+  font-weight: bold;
+
+  span {
+    color: #000;
+  }
+}
+
+@media (max-width: 768px) {
+  .moneyLadder {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.4rem;
+  }
+
+  .ladderStep {
+    flex: 1 1 45%;
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 0.3rem;
+  }
+}

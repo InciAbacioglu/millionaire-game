@@ -1,0 +1,60 @@
+.card {
+  background-color: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  color: #fff;
+  box-shadow: 0 0 20px #103e6599;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.question {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.answerButton {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  margin: 0.75rem auto;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border: 2px solid #2a66ce55;
+  border-radius: 8px;
+  background-color: #222;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color: #205db2;
+    color: #000;
+    box-shadow: 0 0 10px #0c2d6a99;
+    transform: scale(1.02);
+  }
+
+  &:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 4px #00fff755;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 1.2rem;
+  }
+
+  .question {
+    font-size: 1.1rem;
+  }
+
+  .answerButton {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+}

@@ -1,3 +1,5 @@
+import styles from "./MoneyLadder.module.scss";
+
 type Props = {
   currentIndex: number;
 };
@@ -25,11 +27,13 @@ const moneyList = [
 
 export default function MoneyLadder({ currentIndex }: Props) {
   return (
-    <div className="money-ladder">
+    <div className={styles.moneyLadder}>
       {moneyList.map((amount, index) => (
         <div
           key={index}
-          className={`ladder-step ${currentIndex === index ? "active" : ""}`}
+          className={`${styles.ladderStep} ${
+            currentIndex === index ? styles.active : ""
+          }`}
         >
           <span>{18 - index}</span> {amount}
         </div>

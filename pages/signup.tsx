@@ -1,11 +1,9 @@
-// pages/signup.tsx
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { auth } from "../utils/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import Notification from "../components/Notification";
-import Footer from "../components/layout/Footer";
 
 import styles from "../styles/SignupPage.module.scss";
 
@@ -47,7 +45,6 @@ export default function SignupPage() {
         />
         <button type="submit">Sign Up</button>
       </form>
-      <Footer />
     </div>
   );
 }

@@ -1,4 +1,8 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../../utils/firebase";
+
 import styles from "./GameOver.module.scss";
 
 type Props = {
@@ -8,6 +12,28 @@ type Props = {
 
 export default function GameOver({ earned, reason }: Props) {
   const router = useRouter();
+
+  useEffect(() => {
+    const saveResult = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          await addDoc(collection(db, "gameResults"), {
+            uid: user.uid,
+            email: user.email,
+            earned,
+            result: "lost",
+            reason,
+            date: new Date().toISOString(),
+          });
+        } catch (err) {
+          console.error("Error saving failed game:", err);
+        }
+      }
+    };
+
+    saveResult();
+  }, [earned, reason]);
 
   const getMessage = () => {
     if (reason === "timeout") {

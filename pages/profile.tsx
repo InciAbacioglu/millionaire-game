@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
+import styles from "../styles/Profile.module.scss";
 
 type GameResult = {
   earned: string;
@@ -21,7 +22,6 @@ export default function Profile() {
         collection(db, "gameResults"),
         where("uid", "==", user.uid)
       );
-
       const snapshot = await getDocs(q);
       const data = snapshot.docs.map((doc) => doc.data() as GameResult);
       setResults(data);
@@ -31,36 +31,36 @@ export default function Profile() {
     fetchUserResults();
   }, []);
 
-  if (loading) return <p>Loading your game history...</p>;
+  if (loading)
+    return <p className={styles.loading}>Loading your game history...</p>;
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>👤 Your Game History</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>👤 Your Game History</h2>
+
       {results.length === 0 ? (
-        <p>No games played yet.</p>
+        <p className={styles.empty}>No games played yet.</p>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>Result</th>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>Earnings</th>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((r, i) => (
-              <tr key={i}>
-                <td style={{ padding: "0.5rem" }}>
-                  {r.result === "fail" ? "❌ Fail" : "✅ Win"}
-                </td>
-                <td style={{ padding: "0.5rem" }}>{r.earned}</td>
-                <td style={{ padding: "0.5rem" }}>
-                  {new Date(r.date).toLocaleDateString()}
-                </td>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Result</th>
+                <th>Earnings</th>
+                <th>Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {results.map((r, i) => (
+                <tr key={i}>
+                  <td>{r.result === "fail" ? "❌ Fail" : "✅ Win"}</td>
+                  <td>{r.earned}</td>
+                  <td>{new Date(r.date).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

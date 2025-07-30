@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../utils/firebase";
-import styles from "../styles/Leaderboard.module.scss"; // ✅ SCSS eklendi
+import styles from "../styles/Leaderboard.module.scss";
 
 type GameResult = {
   email: string;

@@ -49,10 +49,12 @@
   .jokerPanel {
     flex-direction: column;
     align-items: center;
+    margin-top: 1rem;
   }
 
   .jokerButton {
-    width: 80%;
+    width: 90%;
     text-align: center;
+    font-size: 0.95rem;
   }
 }

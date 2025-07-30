@@ -7,7 +7,7 @@
 import { ReactNode } from "react";
 
 export type User = {
-  email: ReactNode;
+  email: string;
   id: number;
   name: string;
 };
